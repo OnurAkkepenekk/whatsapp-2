@@ -43,12 +43,14 @@ function ChatScreen({ chat, messages }) {
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(async () => {
-    const messages = await getMessages();
-    setMessagesSnapshot(messages);
+  useEffect( () => {
+    (async () => {
+      const messages = await getMessages();
+      const recipientData = await getRecipientData();
+      setMessagesSnapshot(messages);
+      setRecipientSnapshot(recipientData);
+    })()
 
-    const recipientData = await getRecipientData();
-    setRecipientSnapshot(recipientData);
   }, [router.query.id]);
 
   const getRecipientData = async () => {
