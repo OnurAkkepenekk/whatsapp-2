@@ -14,9 +14,11 @@ function Chat({ id, users }) {
   const recipientEmail = getRecipientEmail(users, user);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(async () => {
-    const recipientData = await getRecipientInformation();
-    setRecipientData(recipientData);
+  useEffect(() => {
+    (async () => {
+      const recipientData = await getRecipientInformation();
+      setRecipientData(recipientData);  
+    })()
     console.log("Buraya baksana");
     console.log(recipientData);
   }, []);
