@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import IconButton from "@material-ui/core/IconButton";
-import { Button,Avatar } from "@material-ui/core";
+import { Button, Avatar } from "@material-ui/core";
 import ChatIcon from "@material-ui/icons/Chat";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SearchIcon from "@material-ui/icons/Search";
@@ -17,9 +17,11 @@ function SideBar() {
   const ChatRef = collection(db, "chats");
   const [userChats, setUserChats] = useState(null);
 
-  useEffect(async () => {
-    const chatsSnapshot = await getUserChats();
-    setUserChats(chatsSnapshot);
+  useEffect(() => {
+    (async () => {
+      const chatsSnapshot = await getUserChats();
+      setUserChats(chatsSnapshot);
+    })();
   }, []);
 
   const getUserChats = () => {
