@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import IconButton from "@material-ui/core/IconButton";
-import { Button } from "@material-ui/core";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { Button,Avatar } from "@material-ui/core";
 import ChatIcon from "@material-ui/icons/Chat";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SearchIcon from "@material-ui/icons/Search";
@@ -14,6 +13,7 @@ import Chat from "./Chat";
 
 function SideBar() {
   const [user] = useAuthState(auth);
+  console.log(user.photoURL);
   const ChatRef = collection(db, "chats");
   const [userChats, setUserChats] = useState(null);
 
@@ -142,7 +142,7 @@ const SearchInput = styled.input`
   flex: 1;
 `;
 
-const UserAvatar = styled(AccountCircleIcon)`
+const UserAvatar = styled(Avatar)`
   cursor: pointer;
 
   :hover {
