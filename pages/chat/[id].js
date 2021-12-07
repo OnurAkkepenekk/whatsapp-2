@@ -10,7 +10,7 @@ import {
   orderBy,
   getDoc,
   doc,
-} from "@firebase/firestore";
+} from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import getRecipientEmail from "../../utils/getRecipientEmail";
 

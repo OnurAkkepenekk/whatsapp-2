@@ -18,7 +18,7 @@ import {
   getDocs,
   setDoc,
   addDoc,
-} from "@firebase/firestore";
+} from "firebase/firestore";
 import TimeAgo from "timeago-react";
 
 function ChatScreen({ chat, messages }) {
