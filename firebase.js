@@ -4,7 +4,7 @@ import { GoogleAuthProvider } from "@firebase/auth";
 import { getFirestore } from "@firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAmrSpe3ccuoarPVV7okBjciSBF5Z6RFJc",
+  apiKey: FIREBASE_API_KEY,
   authDomain: "whatsapp-2-b22a6.firebaseapp.com",
   projectId: "whatsapp-2-b22a6",
   storageBucket: "whatsapp-2-b22a6.appspot.com",
