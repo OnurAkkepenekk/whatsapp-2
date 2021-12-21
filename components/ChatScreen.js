@@ -43,14 +43,13 @@ function ChatScreen({ chat, messages }) {
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect( () => {
+  useEffect(() => {
     (async () => {
       const messages = await getMessages();
       const recipientData = await getRecipientData();
       setMessagesSnapshot(messages);
       setRecipientSnapshot(recipientData);
-    })()
-
+    })();
   }, [router.query.id]);
 
   const getRecipientData = async () => {
@@ -111,6 +110,9 @@ function ChatScreen({ chat, messages }) {
     setMessagesSnapshot(messagesDocs);
     scrollToBottom();
   };
+  useEffect(() => {
+    scrollToBottom();
+  });
 
   return (
     <div>
@@ -152,7 +154,7 @@ function ChatScreen({ chat, messages }) {
         </MessageContainer>
         <InputContainer>
           <InsertEmoticon />
-          <Input value={input} onChange={(e) => setInput(e.target.value)} />
+          <Input value={input} placeholder="Type a message" onChange={(e) => setInput(e.target.value)} />
           <button hidden disabled={!input} type="submit" onClick={sendMessage}>
             Send Message
           </button>
@@ -173,6 +175,8 @@ const Input = styled.input`
   position: sticky;
   bottom: 0;
   background-color: white;
+  border-radius: 30px;
+  margin: 0 20px;
 `;
 
 const InputContainer = styled.form`
@@ -216,6 +220,9 @@ const MessageContainer = styled.div`
   padding: 30px;
   background-color: #e5ded8;
   min-height: 90vh;
+  background-image: url("https://user-images.githubusercontent.com/61885344/146793848-5c573f0f-641f-4523-a25a-4e5ea0472047.png");
+  background-repeat: repeat;
+  background-position: center;
 `;
 
 const EndOfMessage = styled.div`

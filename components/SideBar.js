@@ -22,7 +22,7 @@ function SideBar() {
       const chatsSnapshot = await getUserChats();
       setUserChats(chatsSnapshot);
     })();
-  }, []);
+  }, [userChats]);
 
   const getUserChats = () => {
     const userChatRef = query(

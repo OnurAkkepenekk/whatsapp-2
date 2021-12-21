@@ -6,6 +6,7 @@ import getRecipientEmail from "../utils/getRecipientEmail";
 import { getDocs, collection, query, where } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
+import TimeAgo from "timeago-react";
 
 function Chat({ id, users }) {
   const router = useRouter();
@@ -17,8 +18,8 @@ function Chat({ id, users }) {
   useEffect(() => {
     (async () => {
       const recipientData = await getRecipientInformation();
-      setRecipientData(recipientData);  
-    })()
+      setRecipientData(recipientData);
+    })();
     console.log("Buraya baksana");
     console.log(recipientData);
   }, []);
@@ -35,6 +36,7 @@ function Chat({ id, users }) {
     );
     console.log(recpDoc);
     const recipient = recipientSnapshot?.docs?.[0]?.data();
+    console.log(recipient);
     return recipient;
   };
   const enterChat = () => {
@@ -47,7 +49,16 @@ function Chat({ id, users }) {
       ) : (
         <UserAvatar>{recipientEmail[0]}</UserAvatar>
       )}
-      <p>{recipientEmail}</p>
+      <HeaderInformation>
+        <div>{recipientEmail}</div>
+        {recipientData?.lastSeen?.toDate() ? (
+          <p>
+            <TimeAgo datetime={recipientData?.lastSeen?.toDate()} />
+          </p>
+        ) : (
+          <p>Unavailable</p>
+        )}
+      </HeaderInformation>
     </Container>
   );
 }
@@ -68,4 +79,17 @@ const Container = styled.div`
 const UserAvatar = styled(Avatar)`
   margin: 5px;
   margin-right: 15px;
+`;
+
+const HeaderInformation = styled.div`
+  margin-left: 15px;
+  flex: 1;
+
+  > h3 {
+    margin-bottom: 3px;
+  }
+  > p {
+    font-size: 14px;
+    color: gray;
+  }
 `;
