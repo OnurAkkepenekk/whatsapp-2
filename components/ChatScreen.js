@@ -95,6 +95,7 @@ function ChatScreen({ chat, messages }) {
     const userRef = doc(db, "users", user.uid);
     setDoc(userRef, { lastSeen: Timestamp.now() }, { merge: true });
 
+    // Store Message
     const chatRef = doc(db, "chats", router.query.id);
     const messagesRef = collection(chatRef, "messages");
 
