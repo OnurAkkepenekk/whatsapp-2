@@ -18,31 +18,19 @@ import {
   getDocs,
   setDoc,
   addDoc,
+  onSnapshot,
 } from "firebase/firestore";
 import TimeAgo from "timeago-react";
 
 function ChatScreen({ chat, messages }) {
-  console.log(chat);
-  console.log(messages);
-
   const [user] = useAuthState(auth);
   const [input, setInput] = useState("");
   const router = useRouter();
   const endOfMessagesRef = useRef(null);
   const [messagesSnapshot, setMessagesSnapshot] = useState(null);
   const [recipientSnapshot, setRecipientSnapshot] = useState(null);
-
   const recipientEmail = getRecipientEmail(chat.users, user);
 
-  const getMessages = async () => {
-    const chatRef = doc(db, "chats", router.query.id);
-    const messagesRef = collection(chatRef, "messages");
-    const messagesQuery = query(messagesRef, orderBy("timestamp", "asc"));
-    const messagesDocs = (await getDocs(messagesQuery)).docs;
-    return messagesDocs;
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     (async () => {
       const messages = await getMessages();
@@ -52,6 +40,29 @@ function ChatScreen({ chat, messages }) {
     })();
   }, [router.query.id]);
 
+  useEffect(() => {
+    const chatRef = doc(db, "chats", router.query.id);
+    const messagesRef = collection(chatRef, "messages");
+    return onSnapshot(
+      query(messagesRef, orderBy("timestamp", "asc")),
+      (snapshot) => {
+        setMessagesSnapshot(snapshot.docs);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }, []);
+
+  const getMessages = async () => {
+    const chatRef = doc(db, "chats", router.query.id);
+    const messagesRef = collection(chatRef, "messages");
+    const messagesQuery = query(messagesRef, orderBy("timestamp", "asc"));
+    const messagesDocs = (await getDocs(messagesQuery)).docs;
+    console.log(messagesDocs);
+    return messagesDocs;
+  };
+
   const getRecipientData = async () => {
     const recipientQuery = query(
       collection(db, "users"),
@@ -60,6 +71,7 @@ function ChatScreen({ chat, messages }) {
     const usersDocs = (await getDocs(recipientQuery)).docs;
     return usersDocs[0]?.data();
   };
+
   const showMessages = () => {
     if (messagesSnapshot) {
       return messagesSnapshot.map((message) => (
@@ -105,6 +117,7 @@ function ChatScreen({ chat, messages }) {
       user: user.email,
       photoURL: user.photoURL,
     });
+    console.log("The new ID is " + docRef.id);
 
     setInput("");
     const messagesDocs = await getMessages();
@@ -155,7 +168,11 @@ function ChatScreen({ chat, messages }) {
         </MessageContainer>
         <InputContainer>
           <InsertEmoticon />
-          <Input value={input} placeholder="Type a message" onChange={(e) => setInput(e.target.value)} />
+          <Input
+            value={input}
+            placeholder="Type a message"
+            onChange={(e) => setInput(e.target.value)}
+          />
           <button hidden disabled={!input} type="submit" onClick={sendMessage}>
             Send Message
           </button>
