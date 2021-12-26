@@ -10,6 +10,8 @@ import { addDoc, getDocs, collection, query, where } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
 import Chat from "./Chat";
+import { Menu, MenuItem } from "@material-ui/core";
+import * as React from "react";
 
 function SideBar() {
   const [user] = useAuthState(auth);
@@ -111,18 +113,52 @@ function SideBar() {
       setFlag(tmpFlag);
     }
   };
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <div>
       <Container>
         <Header>
-          <UserAvatar src={user.photoURL} onClick={() => auth.signOut()} />
+          <UserAvatar src={user.photoURL} />
 
           <IconsContainer>
-            <IconButton>
+            <IconButton onClick={createChat}>
               <ChatIcon />
             </IconButton>
             <IconButton>
-              <MoreVertIcon />
+              <Button
+                id="demo-positioned-button"
+                aria-controls="demo-positioned-menu"
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+              >
+                <MoreVertIcon />
+              </Button>
+              <Menu
+                id="demo-positioned-menu"
+                aria-labelledby="demo-positioned-button"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={() => auth.signOut()}>Logout</MenuItem>
+              </Menu>
             </IconButton>
           </IconsContainer>
         </Header>
@@ -132,7 +168,6 @@ function SideBar() {
           <SearchInput placeholder="Search in chats" />
         </Search>
         
-        <SidebarButton onClick={createChat}>Start a new chat</SidebarButton>
         {/* List of chats */}
         {userChats?.docs.map((chat) => (
           <Chat key={chat.id} id={chat.id} users={chat.data().users} />
@@ -160,13 +195,6 @@ const Container = styled.div`
   scrollbar-width: none;
 `;
 
-const SidebarButton = styled(Button)`
-  width: 100%;
-  &&& {
-    border-top: 1px solid whitesmoke;
-    border-bottom: 1px solid whitesmoke;
-  }
-`;
 const Header = styled.div`
   display: flex;
   position: sticky;
