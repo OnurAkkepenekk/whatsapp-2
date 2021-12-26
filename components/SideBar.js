@@ -41,6 +41,54 @@ function SideBar() {
         chat.data().users.find((user) => user === recipientEmail)?.length > 0
     );
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     return !!data;
   };
 
