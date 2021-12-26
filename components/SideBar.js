@@ -13,7 +13,7 @@ import Chat from "./Chat";
 
 function SideBar() {
   const [user] = useAuthState(auth);
-  console.log(user.photoURL);
+  const [flag, setFlag] = useState(0);
   const ChatRef = collection(db, "chats");
   const [userChats, setUserChats] = useState(null);
 
@@ -22,8 +22,7 @@ function SideBar() {
       const chatsSnapshot = await getUserChats();
       setUserChats(chatsSnapshot);
     })();
-
-  }, []);
+  }, [flag]);
   // userChats
   const getUserChats = () => {
     const userChatRef = query(
@@ -60,6 +59,8 @@ function SideBar() {
       addDoc(chatsRef, {
         users: [user.email, input],
       });
+      let tmpFlag = flag + 1;
+      setFlag(tmpFlag);
     }
   };
   return (
