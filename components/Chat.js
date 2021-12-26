@@ -3,7 +3,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
 import { auth, db } from "../firebase";
 import getRecipientEmail from "../utils/getRecipientEmail";
-import { getDocs, collection, query, where } from "firebase/firestore";
+import { getDocs, collection, query, where,onSnapshot,orderBy } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
 import TimeAgo from "timeago-react";
@@ -42,6 +42,7 @@ function Chat({ id, users }) {
   const enterChat = () => {
     router.push(`/chat/${id}`);
   };
+
   return (
     <Container onClick={enterChat}>
       {recipientData ? (
