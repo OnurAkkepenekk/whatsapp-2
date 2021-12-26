@@ -83,9 +83,8 @@ function SideBar() {
           <SearchIcon />
           <SearchInput placeholder="Search in chats" />
         </Search>
-
+        
         <SidebarButton onClick={createChat}>Start a new chat</SidebarButton>
-
         {/* List of chats */}
         {userChats?.docs.map((chat) => (
           <Chat key={chat.id} id={chat.id} users={chat.data().users} />
