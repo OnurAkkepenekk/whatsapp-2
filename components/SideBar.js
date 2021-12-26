@@ -1,6 +1,14 @@
 import styled from "styled-components";
 import IconButton from "@material-ui/core/IconButton";
-import { Button, Avatar } from "@material-ui/core";
+import {
+  Button,
+  Avatar,
+  Modal,
+  Box,
+  ButtonGroup,
+  Input,
+  TextField,
+} from "@material-ui/core";
 import ChatIcon from "@material-ui/icons/Chat";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SearchIcon from "@material-ui/icons/Search";
@@ -41,81 +49,12 @@ function SideBar() {
         chat.data().users.find((user) => user === recipientEmail)?.length > 0
     );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     return !!data;
   };
 
-  const createChat = () => {
-    const input = prompt(
-      "Please enter a email adress for the user you wish to chat with."
-    );
-
+  const createChat = (input) => {
     if (!input) return null;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     if (
       EmailValidator.validate(input) &&
       !chatAlreadyExists(input) &&
@@ -138,16 +77,73 @@ function SideBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
+  const [openModal, setOpenModal] = React.useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+  const [email, setEmail] = useState("");
+  const handleChange = (e) => setEmail(e.target.value);
   return (
     <div>
       <Container>
         <Header>
           <UserAvatar src={user.photoURL} />
-
           <IconsContainer>
-            <IconButton onClick={createChat}>
+            <IconButton onClick={handleOpenModal}>
               <ChatIcon />
             </IconButton>
+            <Modal
+              open={openModal}
+              onClose={handleCloseModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                <p>
+                  Please enter an email adress for the user you wish to chat
+                  with.
+                </p>
+                <TextField
+                  id="standard-basic"
+                  label="Email"
+                  variant="standard"
+                  onChange={handleChange}
+                />
+                <StyledButton>
+                  <Button
+                    onClick={() => {
+                      createChat(email);
+                      handleCloseModal();
+                    }}
+                    variant="text"
+                    style={{
+                      color: "green",
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    variant="text"
+                    onClick={handleCloseModal}
+                    style={{
+                      color: "red",
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </StyledButton>
+              </Box>
+            </Modal>
             <IconButton>
               <Button
                 id="demo-positioned-button"
@@ -184,7 +180,7 @@ function SideBar() {
           <SearchIcon />
           <SearchInput placeholder="Search in chats" />
         </Search>
-        
+
         {/* List of chats */}
         {userChats?.docs.map((chat) => (
           <Chat key={chat.id} id={chat.id} users={chat.data().users} />
@@ -247,3 +243,10 @@ const UserAvatar = styled(Avatar)`
 `;
 
 const IconsContainer = styled.div``;
+
+const StyledButton = styled.div`
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  padding: 24px 0px 0px 0px;
+`;
