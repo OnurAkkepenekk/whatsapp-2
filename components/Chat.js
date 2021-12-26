@@ -72,9 +72,13 @@ const Container = styled.div`
   cursor: pointer;
   padding: 15px;
   word-break: break-word;
+  border-top: solid 0.1px white;
 
   :hover {
-    background-color: #e9eaeb;
+    background: rgba(244, 0, 0, 0.43);
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(11.1px);
+-webkit-backdrop-filter: blur(11.1px);
   }
 `;
 const UserAvatar = styled(Avatar)`

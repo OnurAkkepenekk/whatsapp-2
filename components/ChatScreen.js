@@ -187,14 +187,24 @@ export default ChatScreen;
 const Container = styled.div``;
 
 const Input = styled.input`
-  flex: 1;
   align-items: center;
   padding: 12px;
   position: sticky;
   bottom: 0;
-  background-color: white;
-  border-radius: 30px;
-  margin: 0 20px;
+border:solid 0px;
+  transition: 0.7s;
+  border-radius:50px;
+  width:350px;
+
+  background: #ffffff;
+  box-shadow:  9px 9px 27px #b3b3b3,
+               -9px -9px 27px #ffffff;
+  margin-right:10px;
+  margin-left:10px;
+  
+  :focus {
+    width:100%;
+  }
 `;
 
 const InputContainer = styled.form`
@@ -205,6 +215,12 @@ const InputContainer = styled.form`
   bottom: 0;
   background-color: white;
   z-index: 100;
+  /* From https://css.glass */
+background: rgba(255, 255, 255, 0.57);
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.26);
 `;
 
 const Header = styled.div`
@@ -238,9 +254,6 @@ const MessageContainer = styled.div`
   padding: 30px;
   background-color: #e5ded8;
   min-height: 90vh;
-  background-image: url("https://user-images.githubusercontent.com/61885344/146793848-5c573f0f-641f-4523-a25a-4e5ea0472047.png");
-  background-repeat: repeat;
-  background-position: center;
 `;
 
 const EndOfMessage = styled.div`
