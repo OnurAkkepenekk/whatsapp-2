@@ -99,6 +99,23 @@ function SideBar() {
 
     if (!input) return null;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     if (
       EmailValidator.validate(input) &&
       !chatAlreadyExists(input) &&
