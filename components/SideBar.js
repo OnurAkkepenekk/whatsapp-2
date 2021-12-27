@@ -244,7 +244,7 @@ const UserAvatar = styled(Avatar)`
 
 const IconsContainer = styled.div``;
 
-const StyledButton = styled.div`
+export const StyledButton = styled.div`
   position: absolute;
   bottom: 24px;
   right: 24px;

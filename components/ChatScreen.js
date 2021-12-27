@@ -1,8 +1,17 @@
-import { Avatar, IconButton } from "@material-ui/core";
+import * as React from "react";
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Modal,
+} from "@material-ui/core";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
-import { auth, db } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import Message from "./Message";
 import { useState, useEffect, useRef } from "react";
 import getRecipientEmail from "../utils/getRecipientEmail";
@@ -21,6 +30,9 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import TimeAgo from "timeago-react";
+import { ref, uploadBytes, listAll } from "firebase/storage";
+import { StyledButton } from "./SideBar";
+import FilePage from "./FilePage";
 
 function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
@@ -110,6 +122,9 @@ function ChatScreen({ chat, messages }) {
     // Store Message
     const chatRef = doc(db, "chats", router.query.id);
     const messagesRef = collection(chatRef, "messages");
+    if (isUploaded) {
+      //mesaj kaydetsin
+    }
 
     const docRef = await addDoc(messagesRef, {
       timestamp: Timestamp.now(),
@@ -127,7 +142,66 @@ function ChatScreen({ chat, messages }) {
   useEffect(() => {
     scrollToBottom();
   });
-
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
+  const [openModal, setOpenModal] = React.useState(false);
+  const [isUploaded, setIsUploaded] = useState(false);
+  const [openImageModal, setOpenImageModal] = useState(false);
+  const handleOpenImageModal = () => setOpenImageModal(true);
+  const handleCloseImageModal = () => setOpenImageModal(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+  const [storageRef, setStorageRef] = useState("");
+  const uploadFiles = (e) => {
+    const file = e.target.files[0];
+    const fileName = e.target.files[0].name;
+    const storageRef = ref(storage, fileName);
+    setStorageRef(storageRef);
+    uploadBytes(storageRef, file)
+      .then((snapshot) => {
+        setOpenModal(true);
+        setIsUploaded(true);
+      })
+      .catch(() => {
+        setIsUploaded(false);
+      });
+  };
+  const [images, setImages] = useState([]);
+  const showFiles = () => {
+    const listRef = ref(storage, storageRef.fullPath);
+    listAll(listRef)
+      .then((res) => {
+        res.prefixes.forEach((folderRef) => {
+          // All the prefixes under listRef.
+          // You may call listAll() recursively on them.
+        });
+        res.items.forEach((itemRef) => {
+          // All the items under listRef.
+          setImages((arr) => [...arr, itemRef]);
+        });
+        //return <FilePage itemRef={res.items} />;
+      })
+      .catch((error) => {
+        // Uh-oh, an error occurred!
+      });
+  };
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <div>
       <Container>
@@ -153,12 +227,100 @@ function ChatScreen({ chat, messages }) {
             )}
           </HeaderInformation>
           <HeaderIcons>
+            <input
+              name="btn-upload"
+              type="file"
+              id="files"
+              onChange={uploadFiles}
+              hidden
+            />
             <IconButton>
-              <AttachFileSharp />
+              <label htmlFor="files">
+                <AttachFileSharp />
+              </label>
             </IconButton>
-            <IconButton>
+            <Modal
+              open={openModal}
+              onClose={handleCloseModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                {isUploaded ? (
+                  <p>File uploaded successfully!</p>
+                ) : (
+                  <p>File could not uploaded successfully!</p>
+                )}
+                <StyledButton>
+                  <Button
+                    onClick={() => {
+                      handleCloseModal();
+                    }}
+                    variant="text"
+                    style={{
+                      color: "green",
+                    }}
+                  >
+                    OK
+                  </Button>
+                </StyledButton>
+              </Box>
+            </Modal>
+            <IconButton onClick={handleClick}>
               <MoreVertIcon />
+              <Menu
+                id="demo-positioned-menu"
+                aria-labelledby="demo-positioned-button"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    showFiles();
+                    handleOpenImageModal();
+                  }}
+                >
+                  Files
+                </MenuItem>
+              </Menu>
             </IconButton>
+            <Modal
+              open={openImageModal}
+              onClose={handleCloseImageModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                {images ? (
+                  console.log(images),
+                  <FilePage itemRefs={images} />
+                ) : (
+                  <p>Cannot find any files!</p>
+                )}
+                <StyledButton>
+                  <Button
+                    onClick={() => {
+                      handleCloseImageModal();
+                    }}
+                    variant="text"
+                    style={{
+                      color: "green",
+                    }}
+                  >
+                    OK
+                  </Button>
+                </StyledButton>
+              </Box>
+            </Modal>
           </HeaderIcons>
         </Header>
 
@@ -191,19 +353,18 @@ const Input = styled.input`
   padding: 12px;
   position: sticky;
   bottom: 0;
-border:solid 0px;
+  border: solid 0px;
   transition: 0.7s;
-  border-radius:50px;
-  width:350px;
+  border-radius: 50px;
+  width: 350px;
 
   background: #ffffff;
-  box-shadow:  9px 9px 27px #b3b3b3,
-               -9px -9px 27px #ffffff;
-  margin-right:10px;
-  margin-left:10px;
-  
+  box-shadow: 9px 9px 27px #b3b3b3, -9px -9px 27px #ffffff;
+  margin-right: 10px;
+  margin-left: 10px;
+
   :focus {
-    width:100%;
+    width: 100%;
   }
 `;
 
@@ -216,11 +377,11 @@ const InputContainer = styled.form`
   background-color: white;
   z-index: 100;
   /* From https://css.glass */
-background: rgba(255, 255, 255, 0.57);
-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-backdrop-filter: blur(12px);
--webkit-backdrop-filter: blur(12px);
-border: 1px solid rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.57);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.26);
 `;
 
 const Header = styled.div`
