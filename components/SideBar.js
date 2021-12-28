@@ -21,11 +21,29 @@ import Chat from "./Chat";
 import { Menu, MenuItem } from "@material-ui/core";
 import * as React from "react";
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
 function SideBar() {
   const [user] = useAuthState(auth);
   const [flag, setFlag] = useState(0);
   const ChatRef = collection(db, "chats");
   const [userChats, setUserChats] = useState(null);
+
+  const [openModal, setOpenModal] = React.useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+  const [email, setEmail] = useState(null);
+  const handleChange = (e) => setEmail(e.target.value);
 
   useEffect(() => {
     (async () => {
@@ -53,7 +71,11 @@ function SideBar() {
   };
 
   const createChat = (input) => {
-    if (!input) return null;
+    console.log(input);
+    if (!input) {
+      setEmail(null);
+      return alert("Please enter a input");
+    }
 
     if (
       EmailValidator.validate(input) &&
@@ -67,6 +89,9 @@ function SideBar() {
       });
       let tmpFlag = flag + 1;
       setFlag(tmpFlag);
+    } else {
+      setEmail(null);
+      return alert("Please enter a input");
     }
   };
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -77,22 +102,7 @@ function SideBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
-  const [openModal, setOpenModal] = React.useState(false);
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
-  const [email, setEmail] = useState("");
-  const handleChange = (e) => setEmail(e.target.value);
+
   return (
     <div>
       <Container>
