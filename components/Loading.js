@@ -1,17 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 import { Circle } from "better-react-spinkit";
+import styles from '../styles/loading.module.css'
 
 function Loading() {
   return (
     <center style={{display:"grid", placeItems: "center",height: "100vh"}}>
       <div>
-        <img
-          src="https://user-images.githubusercontent.com/61885344/144241841-5bf7c7ab-5703-46db-93c6-0f2f5a214c48.png"
-          alt=""
-          height={200}
-          style={{ marginBottom: 10 }}
-        />
-        <Circle color="#3CBC28" size={60} />
+      <div className={styles.loader}>
+        <span className={styles.span1}></span>
+        <span className={styles.span2}></span>
+        <span className={styles.span3}></span>
+        <h2>Loading...</h2>
+    </div>
       </div>
     </center>
   );
