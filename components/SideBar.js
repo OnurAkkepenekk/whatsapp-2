@@ -5,13 +5,10 @@ import {
   Avatar,
   Modal,
   Box,
-  ButtonGroup,
-  Input,
   TextField,
   Tooltip,
 } from "@material-ui/core";
 import ChatIcon from "@material-ui/icons/Chat";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SearchIcon from "@material-ui/icons/Search";
 import * as EmailValidator from "email-validator";
 import { auth, db } from "../firebase";
@@ -19,7 +16,6 @@ import { addDoc, getDocs, collection, query, where } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
 import Chat from "./Chat";
-import { Menu, MenuItem } from "@material-ui/core";
 import * as React from "react";
 
 const style = {
@@ -39,10 +35,13 @@ function SideBar() {
   const [flag, setFlag] = useState(0);
   const ChatRef = collection(db, "chats");
   const [userChats, setUserChats] = useState(null);
-
+  const [helperText, setHelperText] = useState("");
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+  const handleCloseModal = () => {
+    setHelperText("");
+    setOpenModal(false);
+  };
   const [email, setEmail] = useState(null);
   const handleChange = (e) => setEmail(e.target.value);
 
@@ -75,7 +74,7 @@ function SideBar() {
     console.log(input);
     if (!input) {
       setEmail(null);
-      return alert("Please enter a correct email");
+      return;
     }
 
     if (
@@ -90,21 +89,11 @@ function SideBar() {
       });
       let tmpFlag = flag + 1;
       setFlag(tmpFlag);
+      setEmail(null);
     } else {
       setEmail(null);
-      return alert("Please enter a correct email");
     }
   };
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   return (
     <div>
       <Container>
@@ -132,12 +121,19 @@ function SideBar() {
                   label="Email"
                   variant="standard"
                   onChange={handleChange}
+                  required
+                  helperText={helperText}
                 />
                 <StyledButton>
                   <Button
                     onClick={() => {
-                      createChat(email);
-                      handleCloseModal();
+                      if (email) {
+                        createChat(email);
+                        handleCloseModal();
+                        setHelperText("");
+                      } else {
+                        setHelperText("Please enter a correct email");
+                      }
                     }}
                     variant="text"
                     style={{
@@ -158,34 +154,8 @@ function SideBar() {
                 </StyledButton>
               </Box>
             </Modal>
-            <IconButton>
-              <Button
-                id="demo-positioned-button"
-                aria-controls="demo-positioned-menu"
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-              >
-                <MoreVertIcon />
-              </Button>
-              <Menu
-                id="demo-positioned-menu"
-                aria-labelledby="demo-positioned-button"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={() => auth.signOut()}>Logout</MenuItem>
-              </Menu>
+            <IconButton onClick={() => auth.signOut()}>
+              {/* icon koyulmalı */}
             </IconButton>
           </IconsContainer>
         </Header>
