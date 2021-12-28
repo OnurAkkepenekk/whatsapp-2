@@ -8,6 +8,7 @@ import {
   ButtonGroup,
   Input,
   TextField,
+  Tooltip,
 } from "@material-ui/core";
 import ChatIcon from "@material-ui/icons/Chat";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -74,7 +75,7 @@ function SideBar() {
     console.log(input);
     if (!input) {
       setEmail(null);
-      return alert("Please enter a input");
+      return alert("Please enter a correct email");
     }
 
     if (
@@ -91,9 +92,10 @@ function SideBar() {
       setFlag(tmpFlag);
     } else {
       setEmail(null);
-      return alert("Please enter a input");
+      return alert("Please enter a correct email");
     }
   };
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -110,7 +112,9 @@ function SideBar() {
           <UserAvatar src={user.photoURL} />
           <IconsContainer>
             <IconButton onClick={handleOpenModal}>
-              <ChatIcon />
+              <Tooltip title="Start a new chat">
+                <ChatIcon />
+              </Tooltip>
             </IconButton>
             <Modal
               open={openModal}
