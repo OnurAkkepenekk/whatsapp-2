@@ -14,3 +14,10 @@ a {
 * {
   box-sizing: border-box;
 }
+
+aside.emoji-picker-react {
+  width: 1450px !important;
+  height: 300px !important;
+
+  background: none;
+}
