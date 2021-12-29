@@ -6,7 +6,13 @@ import { auth, db } from "../firebase";
 import Message from "./Message";
 import { useState, useEffect, useRef } from "react";
 import getRecipientEmail from "../utils/getRecipientEmail";
-import { InsertEmoticon, AttachFileSharp, Mic } from "@material-ui/icons/";
+import {
+  InsertEmoticon,
+  AttachFileSharp,
+  Mic,
+  Close,
+  Send,
+} from "@material-ui/icons/";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import {
   doc,
@@ -21,6 +27,9 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import TimeAgo from "timeago-react";
+import dynamic from "next/dynamic";
+import styles from "../styles/chatscreen.module.css";
+const Picker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
 function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
@@ -30,6 +39,7 @@ function ChatScreen({ chat, messages }) {
   const [messagesSnapshot, setMessagesSnapshot] = useState(null);
   const [recipientSnapshot, setRecipientSnapshot] = useState(null);
   const recipientEmail = getRecipientEmail(chat.users, user);
+  const [emojiOpen, setEmojiOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -77,7 +87,7 @@ function ChatScreen({ chat, messages }) {
       return messagesSnapshot.map((message) => (
         <Message
           key={message.id}
-          user={message.data().user}
+          user={message.data()}
           message={{
             ...message.data(),
             timestamp: message.data().timestamp?.toDate().getTime(),
@@ -126,7 +136,12 @@ function ChatScreen({ chat, messages }) {
   };
   useEffect(() => {
     scrollToBottom();
-  });
+  }, [emojiOpen]);
+
+  const handleEmojiClick = (e, emojiObject) => {
+    scrollToBottom();
+    setInput(input + emojiObject.emoji);
+  };
 
   return (
     <div>
@@ -165,9 +180,36 @@ function ChatScreen({ chat, messages }) {
         <MessageContainer>
           {showMessages()}
           <EndOfMessage ref={endOfMessagesRef} />
+          <div
+            className={styles.chatWindowemojiarea}
+            style={{ height: emojiOpen ? "200px" : "0px", marginBottom: 5 }}
+          >
+            <Picker
+              onEmojiClick={handleEmojiClick}
+              disableSearchBar
+              disableSkinTonePicker
+            />
+          </div>
         </MessageContainer>
+
         <InputContainer>
-          <InsertEmoticon />
+          <div
+            className={styles.chatWindowbtn}
+            onClick={() => setEmojiOpen(false)}
+            style={{ width: emojiOpen ? 40 : 0 }}
+          >
+            <Close style={{ color: "#919191" }} />
+          </div>
+
+          <div
+            className={styles.chatWindowbtn}
+            onClick={() => setEmojiOpen(true)}
+          >
+            <InsertEmoticon
+              style={{ color: emojiOpen ? "#009688" : "#919191" }}
+            />
+          </div>
+
           <Input
             value={input}
             placeholder="Type a message"
@@ -177,6 +219,10 @@ function ChatScreen({ chat, messages }) {
             Send Message
           </button>
           <Mic />
+
+          <button hidden disabled={!input} type="submit" onClick={sendMessage}>
+            Send Message
+          </button>
         </InputContainer>
       </Container>
     </div>
@@ -184,26 +230,29 @@ function ChatScreen({ chat, messages }) {
 }
 export default ChatScreen;
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
 
 const Input = styled.input`
   align-items: center;
   padding: 12px;
   position: sticky;
   bottom: 0;
-border:solid 0px;
+  border: solid 0px;
   transition: 0.7s;
-  border-radius:50px;
-  width:350px;
+  border-radius: 50px;
+  width: 350px;
 
   background: #ffffff;
-  box-shadow:  9px 9px 27px #b3b3b3,
-               -9px -9px 27px #ffffff;
-  margin-right:10px;
-  margin-left:10px;
-  
+  box-shadow: 9px 9px 27px #b3b3b3, -9px -9px 27px #ffffff;
+  margin-right: 10px;
+  margin-left: 10px;
+
   :focus {
-    width:100%;
+    width: 100%;
   }
 `;
 
@@ -216,11 +265,11 @@ const InputContainer = styled.form`
   background-color: white;
   z-index: 100;
   /* From https://css.glass */
-background: rgba(255, 255, 255, 0.57);
-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-backdrop-filter: blur(12px);
--webkit-backdrop-filter: blur(12px);
-border: 1px solid rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.57);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.26);
 `;
 
 const Header = styled.div`
@@ -254,6 +303,7 @@ const MessageContainer = styled.div`
   padding: 30px;
   background-color: #e5ded8;
   min-height: 90vh;
+  margin-left: 10px;
 `;
 
 const EndOfMessage = styled.div`
