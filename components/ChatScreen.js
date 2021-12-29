@@ -28,7 +28,7 @@ import {
 } from "firebase/firestore";
 import TimeAgo from "timeago-react";
 import dynamic from "next/dynamic";
-import styles from "../styles/chatscreen.module.css";
+import styles from "../styles/chatScreen.module.css";
 const Picker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
 function ChatScreen({ chat, messages }) {
