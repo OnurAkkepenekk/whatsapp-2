@@ -1,0 +1,118 @@
+.chatWindow {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chatWindowheader {
+  height: 60px;
+  border-bottom: 1px solid #cccccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatWindowheaderinfo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.chatWindowavatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.chatWindowname {
+  font-size: 17px;
+  color: #000;
+}
+
+.chatWindowheaderbuttons {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.chatWindowbtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all ease 0.3s;
+}
+
+.chatWindowbody {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #e5ddd5;
+  background-size: cover;
+  background-position: center;
+  background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
+  padding: 20px 30px;
+}
+
+.chatWindowbody::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.chatWindowbody::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.chatWindowfooter {
+  height: 62px;
+  display: flex;
+  align-items: center;
+}
+
+.chatWindowpre {
+  display: flex;
+  margin: 0 15px;
+}
+
+.chatWindowinputarea {
+
+  width:500px;
+  flex: 1;
+}
+
+.chatWindowinput {
+  width: 100%;
+  height: 40px;
+  border: 0;
+  outline: 0;
+  background-color: #fff;
+  border-radius: 20px;
+  font-size: 15px;
+  color: #4a4a4a;
+  padding-left: 15px;
+}
+
+.chatWindowpos {
+  display: flex;
+  margin: 0 15px;
+}
+
+.chatWindowemojiarea {
+  height: 200px;
+  overflow-y: hidden;
+  transition: all ease 0.3s;
+}
+
+aside.emoji-picker-react {
+  width: 500px !important;
+  background: none;
+}
+
+.emoji-picker-react .emoji-group:before {
+  background: none;
+}
