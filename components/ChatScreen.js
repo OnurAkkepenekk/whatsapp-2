@@ -163,7 +163,7 @@ function ChatScreen({ chat, messages }) {
   const [storageRef, setStorageRef] = useState("");
   const uploadFiles = (e) => {
     const file = e.target.files[0];
-    const fileName = e.target.files[0].name;
+    const fileName = `images/${e.target.files[0].name}`;
     const storageRef = ref(storage, fileName);
     setStorageRef(storageRef);
     uploadBytes(storageRef, file)
@@ -176,8 +176,11 @@ function ChatScreen({ chat, messages }) {
       });
   };
   const [images, setImages] = useState([]);
+  useEffect(() => {
+    showFiles();
+  }, []);
   const showFiles = () => {
-    const listRef = ref(storage, storageRef.fullPath);
+    const listRef = ref(storage, "/images");
     listAll(listRef)
       .then((res) => {
         res.prefixes.forEach((folderRef) => {
@@ -192,6 +195,7 @@ function ChatScreen({ chat, messages }) {
       })
       .catch((error) => {
         // Uh-oh, an error occurred!
+        console.log(error);
       });
   };
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -285,7 +289,6 @@ function ChatScreen({ chat, messages }) {
               >
                 <MenuItem
                   onClick={() => {
-                    showFiles();
                     handleOpenImageModal();
                   }}
                 >
@@ -301,10 +304,9 @@ function ChatScreen({ chat, messages }) {
             >
               <Box sx={style}>
                 {images ? (
-                  console.log(images),
                   <FilePage itemRefs={images} />
                 ) : (
-                  <p>Cannot find any files!</p>
+                  console.log("image yok")
                 )}
                 <StyledButton>
                   <Button
