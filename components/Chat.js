@@ -65,7 +65,10 @@ function Chat({ id, users }) {
           <p>Unavailable</p>
         )}
       </HeaderInformation>
+      
     </Container>
+    
+ 
   );
 }
 
@@ -78,9 +81,12 @@ const Container = styled.div`
   padding: 15px;
   word-break: break-word;
   position:relative;
+  color:white;
+  border-top:0.1px solid #30383c;
+ 
 
   :hover {
-    background:#4187f6;
+    background:#30383c;
     border-top-left-radius:30px;
     border-bottom-left-radius:30px;
 
@@ -93,7 +99,7 @@ const Container = styled.div`
       
       border-radius:50%;
       top:-50px;
-      box-shadow:25px 25px 0 #4187f6;
+      box-shadow:25px 25px 0 #30383c;
   }   
   ::after{
       content:'';
@@ -104,7 +110,7 @@ const Container = styled.div`
       
       border-radius:50%;
       bottom:-50px;
-      box-shadow:25px -25px 0 #4187f6;
+      box-shadow:25px -25px 0 #30383c;
   }
   }
   

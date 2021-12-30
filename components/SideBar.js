@@ -181,8 +181,9 @@ const Container = styled.div`
   height: 100vh;
   width: 350px;
   overflow-y: scroll;
-  box-shadow:10px 0 0 #4187f6;
-border-left: 10px solid #fff;
+  box-shadow:10px 0 0 #30383c;
+border-left: 10px solid #131c21;
+background-color:#131c21;
   ::-webkit-scrollbar {
     display: none;
   }
@@ -195,13 +196,15 @@ const Header = styled.div`
   display: flex;
   position: sticky;
   top: 0;
-  background-color: white;
-  z-index: 1;
+  background-color: #323739;
+  z-index: 999;
   justify-content: space-between;
   align-items: center;
   padding: 15px;
   height: 80px;
-  border-bottom: 1px solid whitesmoke;
+  border-right:1px solid #3f4448;
+  
+  
 `;
 
 const Search = styled.div`
@@ -209,12 +212,17 @@ const Search = styled.div`
   align-items: center;
   padding: 5px;
   border-radius: 2px;
+  margin:5px;
 `;
 
 const SearchInput = styled.input`
   outline-width: 0;
   border: none;
   flex: 1;
+  height:30px;
+  border-radius:20px;
+  padding:15px;
+  background:#323739;
 `;
 
 const UserAvatar = styled(Avatar)`

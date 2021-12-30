@@ -247,12 +247,12 @@ const Input = styled.input`
   width: 350px;
 
   background: #ffffff;
-  box-shadow: 9px 9px 27px #b3b3b3, -9px -9px 27px #ffffff;
   margin-right: 10px;
   margin-left: 10px;
 
   :focus {
     width: 100%;
+    outline:none;
   }
 `;
 
@@ -265,23 +265,23 @@ const InputContainer = styled.form`
   background-color: white;
   z-index: 100;
   /* From https://css.glass */
-  background: rgba(255, 255, 255, 0.57);
+  background: rgba(30, 36, 40, 1);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.26);
+  
 `;
 
 const Header = styled.div`
   position: sticky;
-  background-color: white;
+  background-color: #323739;
   z-index: 100;
   top: 0;
   display: flex;
   padding: 14px;
   height: 82px;
   align-items: center;
-  border-bottom: 3px solid whitesmoke;
+  color:white;
 `;
 
 const HeaderInformation = styled.div`
@@ -301,9 +301,11 @@ const HeaderIcons = styled.div``;
 
 const MessageContainer = styled.div`
   padding: 30px;
-  background-color: #e5ded8;
+  background:#11181c;
+  
   min-height: 90vh;
   margin-left: 10px;
+  
 `;
 
 const EndOfMessage = styled.div`
