@@ -178,12 +178,11 @@ export default SideBar;
 
 const Container = styled.div`
   flex: 0.45;
-  border-right: 1px solid whitesmoke;
   height: 100vh;
-  min-width: 300px;
-  max-width: 350px;
+  width: 350px;
   overflow-y: scroll;
-
+  box-shadow:10px 0 0 #4187f6;
+border-left: 10px solid #fff;
   ::-webkit-scrollbar {
     display: none;
   }
