@@ -15,7 +15,13 @@ import { auth, db, storage } from "../firebase";
 import Message from "./Message";
 import { useState, useEffect, useRef } from "react";
 import getRecipientEmail from "../utils/getRecipientEmail";
-import { InsertEmoticon, AttachFileSharp, Mic } from "@material-ui/icons/";
+import {
+  InsertEmoticon,
+  AttachFileSharp,
+  Mic,
+  Close,
+  Send,
+} from "@material-ui/icons/";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import {
   doc,
@@ -33,6 +39,9 @@ import TimeAgo from "timeago-react";
 import { ref, uploadBytes, listAll } from "firebase/storage";
 import { StyledButton } from "./SideBar";
 import FilePage from "./FilePage";
+import dynamic from "next/dynamic";
+import styles from "../styles/chatScreen.module.css";
+const Picker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
 function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
@@ -42,6 +51,7 @@ function ChatScreen({ chat, messages }) {
   const [messagesSnapshot, setMessagesSnapshot] = useState(null);
   const [recipientSnapshot, setRecipientSnapshot] = useState(null);
   const recipientEmail = getRecipientEmail(chat.users, user);
+  const [emojiOpen, setEmojiOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -89,7 +99,7 @@ function ChatScreen({ chat, messages }) {
       return messagesSnapshot.map((message) => (
         <Message
           key={message.id}
-          user={message.data().user}
+          user={message.data()}
           message={{
             ...message.data(),
             timestamp: message.data().timestamp?.toDate().getTime(),
@@ -141,18 +151,8 @@ function ChatScreen({ chat, messages }) {
   };
   useEffect(() => {
     scrollToBottom();
-  });
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
+  }, [emojiOpen]);
+
   const [openModal, setOpenModal] = React.useState(false);
   const [isUploaded, setIsUploaded] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
@@ -197,6 +197,22 @@ function ChatScreen({ chat, messages }) {
         // Uh-oh, an error occurred!
         console.log(error);
       });
+  };
+
+  const handleEmojiClick = (e, emojiObject) => {
+    scrollToBottom();
+    setInput(input + emojiObject.emoji);
+  };
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
   };
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -304,7 +320,7 @@ function ChatScreen({ chat, messages }) {
             >
               <Box sx={style}>
                 {images ? (
-                  <FilePage itemRefs={images} />
+                  <FilePage itemRefs={images} storageRef={storageRef} />
                 ) : (
                   console.log("image yok")
                 )}
@@ -329,9 +345,36 @@ function ChatScreen({ chat, messages }) {
         <MessageContainer>
           {showMessages()}
           <EndOfMessage ref={endOfMessagesRef} />
+          <div
+            className={styles.chatWindowemojiarea}
+            style={{ height: emojiOpen ? "200px" : "0px", marginBottom: 5 }}
+          >
+            <Picker
+              onEmojiClick={handleEmojiClick}
+              disableSearchBar
+              disableSkinTonePicker
+            />
+          </div>
         </MessageContainer>
+
         <InputContainer>
-          <InsertEmoticon />
+          <div
+            className={styles.chatWindowbtn}
+            onClick={() => setEmojiOpen(false)}
+            style={{ width: emojiOpen ? 40 : 0 }}
+          >
+            <Close style={{ color: "#919191" }} />
+          </div>
+
+          <div
+            className={styles.chatWindowbtn}
+            onClick={() => setEmojiOpen(true)}
+          >
+            <InsertEmoticon
+              style={{ color: emojiOpen ? "#009688" : "#919191" }}
+            />
+          </div>
+
           <Input
             value={input}
             placeholder="Type a message"
@@ -341,6 +384,10 @@ function ChatScreen({ chat, messages }) {
             Send Message
           </button>
           <Mic />
+
+          <button hidden disabled={!input} type="submit" onClick={sendMessage}>
+            Send Message
+          </button>
         </InputContainer>
       </Container>
     </div>
@@ -348,7 +395,11 @@ function ChatScreen({ chat, messages }) {
 }
 export default ChatScreen;
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
 
 const Input = styled.input`
   align-items: center;
@@ -417,6 +468,7 @@ const MessageContainer = styled.div`
   padding: 30px;
   background-color: #e5ded8;
   min-height: 90vh;
+  margin-left: 10px;
 `;
 
 const EndOfMessage = styled.div`
