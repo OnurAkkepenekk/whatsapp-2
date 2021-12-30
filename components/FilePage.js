@@ -11,7 +11,7 @@ import { ref, getDownloadURL } from "firebase/storage";
 import FileDownloadIcon from "@material-ui/icons/FileCopy";
 import { storage } from "../firebase";
 
-function FilePage({ itemRefs }) {
+function FilePage({ itemRefs, storageRef }) {
   const downloadFiles = (url) => {
     const gsReference = ref(storage, `gs://bucket/images/${url}`);
     //const httpsReference = ref(storage, `https://firebasestorage.googleapis.com/b/bucket/o/images${url}`);
@@ -40,6 +40,14 @@ function FilePage({ itemRefs }) {
         // Handle any errors
         console.log(error);
       });
+    // getDownloadURL(gsReference).then(function (url) {
+    //   const image = document.getElementById("image");
+    //   console.log(url);
+    //   image.src = url;
+    // }).catch((error)=>{
+    //   console.log("error");
+    //   console.log(error);
+    // });
   };
   return (
     <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
@@ -49,6 +57,7 @@ function FilePage({ itemRefs }) {
             <FileDownloadIcon />
             <p>{item.name}</p>
             {/* <img src={`${item.fullPath}`} alt={item.name} loading="lazy" /> */}
+            <img src="" alt="" id="image" />
           </IconButton>
         </ImageListItem>
       ))}
