@@ -7,6 +7,7 @@ import { getDocs, collection, query, where,onSnapshot,orderBy } from "firebase/f
 import { useState, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
 import TimeAgo from "timeago-react";
+import styles from '../styles/loading.module.css'
 
 function Chat({ id, users }) {
   const router = useRouter();
@@ -43,13 +44,17 @@ function Chat({ id, users }) {
     router.push(`/chat/${id}`);
   };
 
+ 
+
   return (
+   
     <Container onClick={enterChat}>
       {recipientData ? (
         <UserAvatar src={recipientData?.photoURL} />
       ) : (
         <UserAvatar>{recipientEmail[0]}</UserAvatar>
       )}
+     
       <HeaderInformation>
         <div>{recipientEmail}</div>
         {recipientData?.lastSeen?.toDate() ? (
@@ -72,14 +77,38 @@ const Container = styled.div`
   cursor: pointer;
   padding: 15px;
   word-break: break-word;
-  border-top: solid 0.1px white;
+  position:relative;
 
   :hover {
-    background: rgba(244, 0, 0, 0.43);
-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-backdrop-filter: blur(11.1px);
--webkit-backdrop-filter: blur(11.1px);
+    background:#4187f6;
+    border-top-left-radius:30px;
+    border-bottom-left-radius:30px;
+
+    ::before{
+      content:'';
+      position: absolute;
+      right:0;
+      width:50px;
+      height:50px;
+      
+      border-radius:50%;
+      top:-50px;
+      box-shadow:25px 25px 0 #4187f6;
+  }   
+  ::after{
+      content:'';
+      position: absolute;
+      right:0;
+      width:50px;
+      height:50px;
+      
+      border-radius:50%;
+      bottom:-50px;
+      box-shadow:25px -25px 0 #4187f6;
   }
+  }
+  
+  
 `;
 const UserAvatar = styled(Avatar)`
   margin: 5px;
