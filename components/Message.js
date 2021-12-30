@@ -49,22 +49,49 @@ const Container = styled.div``;
 const MessageElement = styled.p`
   width: fit-content;
   padding: 15px;
-  border-radius: 8px;
+  border-radius: 35px;
   margin: 10px;
   min-width: 60px;
   padding-bottom: 26px;
   position: relative;
-  text-align: right;
+  text-align: right;  
 `;
 
 const Sender = styled(MessageElement)`
   margin-left: auto;
   background-color: #dcf8c6;
+  box-shadow:inset 10px 10px 10px rgba(0,0,0,0.05),
+  15px 25px 10px rgba(0,0,0,0.05),
+  15px 20px 20px rgba(0,0,0,0.05),
+  inset -10px -10px 15px rgba(220,248,198,0.9);
+  ::before{
+    content:'';
+    position: absolute;
+    top:-10px;
+    right:0;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:black;
+  }
 `;
 
 const Reciever = styled(MessageElement)`
   background-color: whitesmoke;
   text-align: left;
+  box-shadow:inset 10px 10px 10px rgba(0,0,0,0.05),
+  15px 25px 10px rgba(0,0,0,0.05),
+  15px 20px 20px rgba(0,0,0,0.05),
+  inset -10px -10px 15px rgba(255,255,255,0.9);
+  ::before{
+    content:'';
+    position: absolute;
+    top:-10px;
+    left:0;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:black;
 `;
 
 const Timestamp = styled.span`
