@@ -4,8 +4,8 @@ import { ImageList, ImageListItem } from "@material-ui/core";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase";
 
-function FilePage({ itemRefs}) {
-
+function FilePage({ itemRefs }) {
+  const [imageUrls, setImageUrls] = React.useState([]);
   React.useEffect(() => {
     itemRefs.map((item) => {
       downloadFiles(item.name);
@@ -22,8 +22,9 @@ function FilePage({ itemRefs}) {
         };
         xhr.open("GET", url);
         xhr.send();
-        const image = document.getElementById("image");
-        image.src = url;
+        //const image = document.getElementById("image");
+        //image.src = url;
+        setImageUrls((arr) => [...arr, url]);
       })
       .catch((error) => {
         console.log(error);
@@ -31,12 +32,12 @@ function FilePage({ itemRefs}) {
   };
   return (
     <ImageList cols={3} rowHeight={164}>
-      {itemRefs.map((item) => (
-        <ImageListItem key={item.name}>
-            {/* <FileDownloadIcon />
+      {/* <FileDownloadIcon />
             <p>{item.name}</p> */}
-            {/* <img src={item} alt={item} loading="lazy" /> */}
-            <img id="image" />
+      {/* <img src={item} alt={item} loading="lazy" /> */}
+      {imageUrls.map((item) => (
+        <ImageListItem key={item.name}>
+          <img src={item} srcSet={item} alt={item} loading="lazy" />
         </ImageListItem>
       ))}
     </ImageList>

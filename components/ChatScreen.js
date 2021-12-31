@@ -175,6 +175,7 @@ function ChatScreen({ chat, messages }) {
       .then((snapshot) => {
         setOpenModal(true);
         setIsUploaded(true);
+        setItemRefs((arr) => [...arr, storageRef]);
       })
       .catch(() => {
         setOpenModal(true);
