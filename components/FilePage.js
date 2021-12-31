@@ -1,10 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import * as React from "react";
-import { IconButton, ImageList, ImageListItem } from "@material-ui/core";
+import { ImageList, ImageListItem } from "@material-ui/core";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase";
 
-function FilePage({ itemRefs }) {
+function FilePage({ itemRefs}) {
+
   React.useEffect(() => {
     itemRefs.map((item) => {
       downloadFiles(item.name);
@@ -22,7 +23,6 @@ function FilePage({ itemRefs }) {
         xhr.open("GET", url);
         xhr.send();
         const image = document.getElementById("image");
-        console.log(url);
         image.src = url;
       })
       .catch((error) => {

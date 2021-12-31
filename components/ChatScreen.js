@@ -1,13 +1,5 @@
 import * as React from "react";
-import {
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  Menu,
-  MenuItem,
-  Modal,
-} from "@material-ui/core";
+import { Avatar, IconButton } from "@material-ui/core";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
@@ -20,9 +12,8 @@ import {
   AttachFileSharp,
   Mic,
   Close,
-  Send,
 } from "@material-ui/icons/";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import FileCopyOutlined from "@material-ui/icons/FileCopyOutlined";
 import {
   doc,
   Timestamp,
@@ -37,10 +28,10 @@ import {
 } from "firebase/firestore";
 import TimeAgo from "timeago-react";
 import { ref, uploadBytes, listAll } from "firebase/storage";
-import { StyledButton } from "./SideBar";
-import FilePage from "./FilePage";
 import dynamic from "next/dynamic";
 import styles from "../styles/chatScreen.module.css";
+import NewModal from "./NewModal";
+
 const Picker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
 function ChatScreen({ chat, messages }) {
@@ -52,6 +43,15 @@ function ChatScreen({ chat, messages }) {
   const [recipientSnapshot, setRecipientSnapshot] = useState(null);
   const recipientEmail = getRecipientEmail(chat.users, user);
   const [emojiOpen, setEmojiOpen] = useState(false);
+  const [itemRefs, setItemRefs] = useState([]);
+  const [openModal, setOpenModal] = React.useState(false);
+  const [isUploaded, setIsUploaded] = useState(false);
+  const [openImageModal, setOpenImageModal] = useState(false);
+  const [storageRef, setStorageRef] = useState("");
+
+  useEffect(() => {
+    showFiles();
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -76,12 +76,15 @@ function ChatScreen({ chat, messages }) {
     );
   }, []);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [emojiOpen]);
+
   const getMessages = async () => {
     const chatRef = doc(db, "chats", router.query.id);
     const messagesRef = collection(chatRef, "messages");
     const messagesQuery = query(messagesRef, orderBy("timestamp", "asc"));
     const messagesDocs = (await getDocs(messagesQuery)).docs;
-    console.log(messagesDocs);
     return messagesDocs;
   };
 
@@ -115,6 +118,20 @@ function ChatScreen({ chat, messages }) {
     }
   };
 
+  const showFiles = () => {
+    const listRef = ref(storage, "/images");
+    listAll(listRef)
+      .then((res) => {
+        res.prefixes.forEach((folderRef) => {});
+        res.items.forEach((itemRef) => {
+          setItemRefs((arr) => [...arr, itemRef]);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const scrollToBottom = () => {
     endOfMessagesRef.current.scrollIntoView({
       behavior: "smooth",
@@ -142,25 +159,13 @@ function ChatScreen({ chat, messages }) {
       user: user.email,
       photoURL: user.photoURL,
     });
-    console.log("The new ID is " + docRef.id);
 
     setInput("");
     const messagesDocs = await getMessages();
     setMessagesSnapshot(messagesDocs);
     scrollToBottom();
   };
-  useEffect(() => {
-    scrollToBottom();
-  }, [emojiOpen]);
 
-  const [openModal, setOpenModal] = React.useState(false);
-  const [isUploaded, setIsUploaded] = useState(false);
-  const [openImageModal, setOpenImageModal] = useState(false);
-  const handleOpenImageModal = () => setOpenImageModal(true);
-  const handleCloseImageModal = () => setOpenImageModal(false);
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
-  const [storageRef, setStorageRef] = useState("");
   const uploadFiles = (e) => {
     const file = e.target.files[0];
     const fileName = `images/${e.target.files[0].name}`;
@@ -172,30 +177,8 @@ function ChatScreen({ chat, messages }) {
         setIsUploaded(true);
       })
       .catch(() => {
+        setOpenModal(true);
         setIsUploaded(false);
-      });
-  };
-  const [images, setImages] = useState([]);
-  useEffect(() => {
-    showFiles();
-  }, []);
-  const showFiles = () => {
-    const listRef = ref(storage, "/images");
-    listAll(listRef)
-      .then((res) => {
-        res.prefixes.forEach((folderRef) => {
-          // All the prefixes under listRef.
-          // You may call listAll() recursively on them.
-        });
-        res.items.forEach((itemRef) => {
-          // All the items under listRef.
-          setImages((arr) => [...arr, itemRef]);
-        });
-        //return <FilePage itemRef={res.items} />;
-      })
-      .catch((error) => {
-        // Uh-oh, an error occurred!
-        console.log(error);
       });
   };
 
@@ -203,14 +186,7 @@ function ChatScreen({ chat, messages }) {
     scrollToBottom();
     setInput(input + emojiObject.emoji);
   };
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+
   return (
     <div>
       <Container>
@@ -248,86 +224,24 @@ function ChatScreen({ chat, messages }) {
                 <AttachFileSharp />
               </label>
             </IconButton>
-            <Modal
-              open={openModal}
-              onClose={handleCloseModal}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
+            <NewModal
+              text="File uploaded successfully!"
+              openModal={openModal}
+              setOpenModal={setOpenModal}
+            />
+            <IconButton
+              onClick={() => {
+                setOpenImageModal(true);
+              }}
             >
-              <Box sx={style}>
-                {isUploaded ? (
-                  <p>File uploaded successfully!</p>
-                ) : (
-                  <p>File could not uploaded successfully!</p>
-                )}
-                <StyledButton>
-                  <Button
-                    onClick={() => {
-                      handleCloseModal();
-                    }}
-                    variant="text"
-                    style={{
-                      color: "green",
-                    }}
-                  >
-                    OK
-                  </Button>
-                </StyledButton>
-              </Box>
-            </Modal>
-            <IconButton onClick={handleClick}>
-              <MoreVertIcon />
-              <Menu
-                id="demo-positioned-menu"
-                aria-labelledby="demo-positioned-button"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-              >
-                <MenuItem
-                  onClick={() => {
-                    handleOpenImageModal();
-                  }}
-                >
-                  Files
-                </MenuItem>
-              </Menu>
+              <FileCopyOutlined />
             </IconButton>
-            <Modal
-              open={openImageModal}
-              onClose={handleCloseImageModal}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box sx={style}>
-                {images ? (
-                  <FilePage itemRefs={images} />
-                ) : (
-                  console.log("image yok")
-                )}
-                <StyledButton>
-                  <Button
-                    onClick={() => {
-                      handleCloseImageModal();
-                    }}
-                    variant="text"
-                    style={{
-                      color: "green",
-                    }}
-                  >
-                    OK
-                  </Button>
-                </StyledButton>
-              </Box>
-            </Modal>
+            <NewModal
+              text=""
+              openModal={openImageModal}
+              setOpenModal={setOpenImageModal}
+              itemRefs={itemRefs}
+            ></NewModal>
           </HeaderIcons>
         </Header>
 

@@ -71,7 +71,6 @@ function SideBar() {
   };
 
   const createChat = (input) => {
-    console.log(input);
     if (!input) {
       setEmail(null);
       return;
