@@ -21,8 +21,6 @@ function Chat({ id, users }) {
       const recipientData = await getRecipientInformation();
       setRecipientData(recipientData);
     })();
-    console.log("Buraya baksana");
-    console.log(recipientData);
   }, []);
 
   const getRecipientInformation = async () => {
@@ -35,9 +33,7 @@ function Chat({ id, users }) {
     const recpDoc = recipientSnapshot.docs.find(
       (user) => user.data().email === recipientEmail
     );
-    console.log(recpDoc);
     const recipient = recipientSnapshot?.docs?.[0]?.data();
-    console.log(recipient);
     return recipient;
   };
   const enterChat = () => {

@@ -1,8 +1,9 @@
+import * as React from "react";
 import { Avatar, IconButton } from "@material-ui/core";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
-import { auth, db } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import Message from "./Message";
 import { useState, useEffect, useRef } from "react";
 import getRecipientEmail from "../utils/getRecipientEmail";
@@ -11,9 +12,8 @@ import {
   AttachFileSharp,
   Mic,
   Close,
-  Send,
 } from "@material-ui/icons/";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import FileCopyOutlined from "@material-ui/icons/FileCopyOutlined";
 import {
   doc,
   Timestamp,
@@ -27,8 +27,11 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import TimeAgo from "timeago-react";
+import { ref, uploadBytes, listAll } from "firebase/storage";
 import dynamic from "next/dynamic";
 import styles from "../styles/chatScreen.module.css";
+import NewModal from "./NewModal";
+
 const Picker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
 function ChatScreen({ chat, messages }) {
@@ -40,6 +43,15 @@ function ChatScreen({ chat, messages }) {
   const [recipientSnapshot, setRecipientSnapshot] = useState(null);
   const recipientEmail = getRecipientEmail(chat.users, user);
   const [emojiOpen, setEmojiOpen] = useState(false);
+  const [itemRefs, setItemRefs] = useState([]);
+  const [openModal, setOpenModal] = React.useState(false);
+  const [isUploaded, setIsUploaded] = useState(false);
+  const [openImageModal, setOpenImageModal] = useState(false);
+  const [storageRef, setStorageRef] = useState("");
+
+  useEffect(() => {
+    showFiles();
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -64,12 +76,15 @@ function ChatScreen({ chat, messages }) {
     );
   }, []);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [emojiOpen]);
+
   const getMessages = async () => {
     const chatRef = doc(db, "chats", router.query.id);
     const messagesRef = collection(chatRef, "messages");
     const messagesQuery = query(messagesRef, orderBy("timestamp", "asc"));
     const messagesDocs = (await getDocs(messagesQuery)).docs;
-    console.log(messagesDocs);
     return messagesDocs;
   };
 
@@ -103,6 +118,20 @@ function ChatScreen({ chat, messages }) {
     }
   };
 
+  const showFiles = () => {
+    const listRef = ref(storage, "/images");
+    listAll(listRef)
+      .then((res) => {
+        res.prefixes.forEach((folderRef) => {});
+        res.items.forEach((itemRef) => {
+          setItemRefs((arr) => [...arr, itemRef]);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const scrollToBottom = () => {
     endOfMessagesRef.current.scrollIntoView({
       behavior: "smooth",
@@ -120,6 +149,9 @@ function ChatScreen({ chat, messages }) {
     // Store Message
     const chatRef = doc(db, "chats", router.query.id);
     const messagesRef = collection(chatRef, "messages");
+    if (isUploaded) {
+      //mesaj kaydetsin
+    }
 
     const docRef = await addDoc(messagesRef, {
       timestamp: Timestamp.now(),
@@ -127,16 +159,28 @@ function ChatScreen({ chat, messages }) {
       user: user.email,
       photoURL: user.photoURL,
     });
-    console.log("The new ID is " + docRef.id);
 
     setInput("");
     const messagesDocs = await getMessages();
     setMessagesSnapshot(messagesDocs);
     scrollToBottom();
   };
-  useEffect(() => {
-    scrollToBottom();
-  }, [emojiOpen]);
+
+  const uploadFiles = (e) => {
+    const file = e.target.files[0];
+    const fileName = `images/${e.target.files[0].name}`;
+    const storageRef = ref(storage, fileName);
+    setStorageRef(storageRef);
+    uploadBytes(storageRef, file)
+      .then((snapshot) => {
+        setOpenModal(true);
+        setIsUploaded(true);
+      })
+      .catch(() => {
+        setOpenModal(true);
+        setIsUploaded(false);
+      });
+  };
 
   const handleEmojiClick = (e, emojiObject) => {
     scrollToBottom();
@@ -168,12 +212,36 @@ function ChatScreen({ chat, messages }) {
             )}
           </HeaderInformation>
           <HeaderIcons>
+            <input
+              name="btn-upload"
+              type="file"
+              id="files"
+              onChange={uploadFiles}
+              hidden
+            />
             <IconButton>
-              <AttachFileSharp />
+              <label htmlFor="files">
+                <AttachFileSharp />
+              </label>
             </IconButton>
-            <IconButton>
-              <MoreVertIcon />
+            <NewModal
+              text="File uploaded successfully!"
+              openModal={openModal}
+              setOpenModal={setOpenModal}
+            />
+            <IconButton
+              onClick={() => {
+                setOpenImageModal(true);
+              }}
+            >
+              <FileCopyOutlined />
             </IconButton>
+            <NewModal
+              text=""
+              openModal={openImageModal}
+              setOpenModal={setOpenImageModal}
+              itemRefs={itemRefs}
+            ></NewModal>
           </HeaderIcons>
         </Header>
 
@@ -311,3 +379,15 @@ const MessageContainer = styled.div`
 const EndOfMessage = styled.div`
   margin-bottom: 50px;
 `;
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 1000,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
