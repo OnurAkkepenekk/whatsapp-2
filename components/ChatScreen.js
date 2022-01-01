@@ -12,8 +12,9 @@ import {
   AttachFileSharp,
   Mic,
   Close,
+  Image,
 } from "@material-ui/icons/";
-import FileCopyOutlined from "@material-ui/icons/FileCopyOutlined";
+import { AddPhotoAlternate, AttachFile} from "@material-ui/icons";
 import {
   doc,
   Timestamp,
@@ -132,6 +133,7 @@ function ChatScreen({ chat, messages }) {
       .catch((error) => {
         console.log(error);
       });
+    console.log(itemRefs);
   };
 
   const scrollToBottom = () => {
@@ -228,7 +230,7 @@ function ChatScreen({ chat, messages }) {
               }}
             >
               <label htmlFor="files">
-                <AttachFileSharp />
+                <AddPhotoAlternate />
               </label>
             </IconButton>
             <NewModal
@@ -244,7 +246,7 @@ function ChatScreen({ chat, messages }) {
                 setOpenImageModal(true);
               }}
             >
-              <FileCopyOutlined />
+              <AttachFile/>
             </IconButton>
             <NewModal
               text=""
