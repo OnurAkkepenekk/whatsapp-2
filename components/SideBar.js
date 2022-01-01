@@ -99,9 +99,11 @@ function SideBar() {
         <Header>
           <UserAvatar src={user.photoURL} />
           <IconsContainer>
-            <IconButton onClick={handleOpenModal}>
+            <IconButton onClick={handleOpenModal} style={{
+                      color: "white",
+                    }}>
               <Tooltip title="Start a new chat">
-                <ChatIcon />
+                <ChatIcon  />
               </Tooltip>
             </IconButton>
             <Modal
@@ -160,7 +162,9 @@ function SideBar() {
         </Header>
 
         <Search>
-          <SearchIcon />
+          <SearchIcon style={{
+                      color: "white",
+                    }}/>
           <SearchInput placeholder="Search in chats" />
         </Search>
 
@@ -232,7 +236,8 @@ const UserAvatar = styled(Avatar)`
   }
 `;
 
-const IconsContainer = styled.div``;
+const IconsContainer = styled.div`
+`
 
 export const StyledButton = styled.div`
   position: absolute;

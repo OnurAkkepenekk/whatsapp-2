@@ -48,6 +48,7 @@ function ChatScreen({ chat, messages }) {
   const [isUploaded, setIsUploaded] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
   const [storageRef, setStorageRef] = useState("");
+  const [chatId, setChatId] = useState("");
 
   useEffect(() => {
     showFiles();
@@ -59,6 +60,7 @@ function ChatScreen({ chat, messages }) {
       const recipientData = await getRecipientData();
       setMessagesSnapshot(messages);
       setRecipientSnapshot(recipientData);
+      setChatId(router.query.id);
     })();
   }, [router.query.id]);
 
@@ -168,7 +170,7 @@ function ChatScreen({ chat, messages }) {
 
   const uploadFiles = (e) => {
     const file = e.target.files[0];
-    const fileName = `images/${e.target.files[0].name}`;
+    const fileName = `images/${chatId}/${e.target.files[0].name}`;
     const storageRef = ref(storage, fileName);
     setStorageRef(storageRef);
     uploadBytes(storageRef, file)
@@ -220,7 +222,11 @@ function ChatScreen({ chat, messages }) {
               onChange={uploadFiles}
               hidden
             />
-            <IconButton>
+            <IconButton
+              style={{
+                color: "white",
+              }}
+            >
               <label htmlFor="files">
                 <AttachFileSharp />
               </label>
@@ -231,6 +237,9 @@ function ChatScreen({ chat, messages }) {
               setOpenModal={setOpenModal}
             />
             <IconButton
+              style={{
+                color: "white",
+              }}
               onClick={() => {
                 setOpenImageModal(true);
               }}
@@ -242,6 +251,7 @@ function ChatScreen({ chat, messages }) {
               openModal={openImageModal}
               setOpenModal={setOpenImageModal}
               itemRefs={itemRefs}
+              chatId={chatId}
             ></NewModal>
           </HeaderIcons>
         </Header>
@@ -321,7 +331,7 @@ const Input = styled.input`
 
   :focus {
     width: 100%;
-    outline:none;
+    outline: none;
   }
 `;
 
@@ -338,7 +348,6 @@ const InputContainer = styled.form`
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  
 `;
 
 const Header = styled.div`
@@ -350,7 +359,7 @@ const Header = styled.div`
   padding: 14px;
   height: 82px;
   align-items: center;
-  color:white;
+  color: white;
 `;
 
 const HeaderInformation = styled.div`
@@ -370,11 +379,10 @@ const HeaderIcons = styled.div``;
 
 const MessageContainer = styled.div`
   padding: 30px;
-  background:#11181c;
-  
+  background: #11181c;
+
   min-height: 90vh;
   margin-left: 10px;
-  
 `;
 
 const EndOfMessage = styled.div`

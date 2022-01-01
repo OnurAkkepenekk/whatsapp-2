@@ -4,7 +4,7 @@ import { ImageList, ImageListItem } from "@material-ui/core";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase";
 
-function FilePage({ itemRefs }) {
+function FilePage({ itemRefs, chatId }) {
   const [imageUrls, setImageUrls] = React.useState([]);
   React.useEffect(() => {
     itemRefs.map((item) => {
@@ -12,7 +12,7 @@ function FilePage({ itemRefs }) {
     });
   }, []);
   const downloadFiles = (url) => {
-    const pathReference = ref(storage, "images/" + url);
+    const pathReference = ref(storage, "images/" + chatId + "/" + url);
     getDownloadURL(pathReference)
       .then((url) => {
         const xhr = new XMLHttpRequest();
