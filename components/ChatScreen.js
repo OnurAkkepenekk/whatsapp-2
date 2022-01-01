@@ -48,12 +48,6 @@ function ChatScreen({ chat, messages }) {
   const [openModal, setOpenModal] = React.useState(false);
   const [isUploaded, setIsUploaded] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
-  const [storageRef, setStorageRef] = useState("");
-  const [chatId, setChatId] = useState("");
-
-  useEffect(() => {
-    showFiles();
-  }, []);
 
   useEffect(() => {
     (async () => {
@@ -61,7 +55,7 @@ function ChatScreen({ chat, messages }) {
       const recipientData = await getRecipientData();
       setMessagesSnapshot(messages);
       setRecipientSnapshot(recipientData);
-      setChatId(router.query.id);
+      showFiles();
     })();
   }, [router.query.id]);
 
@@ -122,13 +116,10 @@ function ChatScreen({ chat, messages }) {
   };
 
   const showFiles = () => {
-    const listRef = ref(storage, "/images");
+    const listRef = ref(storage, "/images/" + router.query.id);
     listAll(listRef)
       .then((res) => {
-        res.prefixes.forEach((folderRef) => {});
-        res.items.forEach((itemRef) => {
-          setItemRefs((arr) => [...arr, itemRef]);
-        });
+        setItemRefs(res.items);
       })
       .catch((error) => {
         console.log(error);
@@ -172,9 +163,8 @@ function ChatScreen({ chat, messages }) {
 
   const uploadFiles = (e) => {
     const file = e.target.files[0];
-    const fileName = `images/${chatId}/${e.target.files[0].name}`;
+    const fileName = `images/${router.query.id}/${e.target.files[0].name}`;
     const storageRef = ref(storage, fileName);
-    setStorageRef(storageRef);
     uploadBytes(storageRef, file)
       .then((snapshot) => {
         setOpenModal(true);
@@ -253,7 +243,7 @@ function ChatScreen({ chat, messages }) {
               openModal={openImageModal}
               setOpenModal={setOpenImageModal}
               itemRefs={itemRefs}
-              chatId={chatId}
+              chatId={router.query.id}
             ></NewModal>
           </HeaderIcons>
         </Header>
