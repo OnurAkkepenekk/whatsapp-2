@@ -11,7 +11,7 @@ function Message({ user, message }) {
     <Container>
       <TypeOfMessage>
         {TypeOfMessage === Reciever ? (
-          <div>
+          <div style={{display: 'flex', justifyContent: 'center'}}>
             <div style={{ display: "inline-block" }}>
               <UserAvatar
                 style={{
@@ -22,11 +22,11 @@ function Message({ user, message }) {
                 src={user.photoURL}
               />
             </div>
-            <div style={{ display: "inline-block" }}>{message.message}</div>
+            <div style={{ display: "flex", justifyContent: "center",textAlign: "center",alignItems: "center",paddingLeft:10}}>{message.message}</div>
           </div>
         ) : (
-          <div>
-            {message.message}
+          <div style={{display: 'flex', justifyContent: 'center'}}>
+            <div style={{ display: "flex", justifyContent: "center",textAlign: "center",alignItems: "center",paddingRight:10}}>{message.message}</div>
             <UserAvatar
               style={{ display: "inline-block" }}
               src={user.photoURL}
