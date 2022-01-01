@@ -7,7 +7,9 @@ import {
   Box,
   TextField,
   Tooltip,
+  Icon,
 } from "@material-ui/core";
+
 import ChatIcon from "@material-ui/icons/Chat";
 import SearchIcon from "@material-ui/icons/Search";
 import * as EmailValidator from "email-validator";
@@ -17,7 +19,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
 import Chat from "./Chat";
 import * as React from "react";
-
+import { ExitToApp} from '@material-ui/icons';
 const style = {
   position: "absolute",
   top: "50%",
@@ -106,6 +108,7 @@ function SideBar() {
                 <ChatIcon  />
               </Tooltip>
             </IconButton>
+            
             <Modal
               open={openModal}
               onClose={handleCloseModal}
@@ -156,7 +159,7 @@ function SideBar() {
               </Box>
             </Modal>
             <IconButton onClick={() => auth.signOut()}>
-              {/* icon koyulmalı */}
+            <ExitToApp/>
             </IconButton>
           </IconsContainer>
         </Header>
