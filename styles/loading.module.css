@@ -23,6 +23,7 @@
     border: 2px solid blue;
     pointer-events: none;
     animation: animate 5s linear infinite;
+  
 }
 .loader span:nth-child(1) {
     border-radius: 38% 62% 64% 36% / 43% 35% 65% 57% ;

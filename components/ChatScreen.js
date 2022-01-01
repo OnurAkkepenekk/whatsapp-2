@@ -211,15 +211,17 @@ function ChatScreen({ chat, messages }) {
               <p>Loading last active...</p>
             )}
           </HeaderInformation>
-          <HeaderIcons>
+          <HeaderIcons >
             <input
               name="btn-upload"
               type="file"
               id="files"
               onChange={uploadFiles}
-              hidden
+              hidden 
             />
-            <IconButton>
+            <IconButton style={{
+                      color: "white",
+                    }}>
               <label htmlFor="files">
                 <AttachFileSharp />
               </label>
@@ -229,7 +231,9 @@ function ChatScreen({ chat, messages }) {
               openModal={openModal}
               setOpenModal={setOpenModal}
             />
-            <IconButton
+            <IconButton style={{
+                      color: "white",
+                    }}
               onClick={() => {
                 setOpenImageModal(true);
               }}
