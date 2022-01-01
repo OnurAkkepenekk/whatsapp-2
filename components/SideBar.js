@@ -19,7 +19,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
 import Chat from "./Chat";
 import * as React from "react";
-import { ExitToApp} from '@material-ui/icons';
+import { ExitToApp } from "@material-ui/icons";
 const style = {
   position: "absolute",
   top: "50%",
@@ -101,14 +101,12 @@ function SideBar() {
         <Header>
           <UserAvatar src={user.photoURL} />
           <IconsContainer>
-            <IconButton onClick={handleOpenModal} style={{
-                      color: "white",
-                    }}>
+            <IconButton onClick={handleOpenModal} style={{ color: "white" }}>
               <Tooltip title="Start a new chat">
-                <ChatIcon  />
+                <ChatIcon />
               </Tooltip>
             </IconButton>
-            
+
             <Modal
               open={openModal}
               onClose={handleCloseModal}
@@ -159,16 +157,23 @@ function SideBar() {
               </Box>
             </Modal>
             <IconButton onClick={() => auth.signOut()}>
-            <ExitToApp/>
+              <Tooltip title="Sign Out">
+                <ExitToApp style={{ color: "white" }} />
+              </Tooltip>
             </IconButton>
           </IconsContainer>
         </Header>
 
         <Search>
-          <SearchIcon style={{
-                      color: "white",
-                    }}/>
-          <SearchInput placeholder="Search in chats" />
+          <SearchIcon
+            style={{
+              color: "white",
+            }}
+          />
+          <SearchInput
+            style={{ color: "white" }}
+            placeholder="Search in chats"
+          />
         </Search>
 
         {/* List of chats */}
@@ -187,9 +192,9 @@ const Container = styled.div`
   height: 100vh;
   width: 350px;
   overflow-y: scroll;
-  box-shadow:10px 0 0 #30383c;
-border-left: 10px solid #131c21;
-background-color:#131c21;
+  box-shadow: 10px 0 0 #30383c;
+  border-left: 10px solid #131c21;
+  background-color: #131c21;
   ::-webkit-scrollbar {
     display: none;
   }
@@ -208,9 +213,7 @@ const Header = styled.div`
   align-items: center;
   padding: 15px;
   height: 80px;
-  border-right:1px solid #3f4448;
-  
-  
+  border-right: 1px solid #3f4448;
 `;
 
 const Search = styled.div`
@@ -218,17 +221,17 @@ const Search = styled.div`
   align-items: center;
   padding: 5px;
   border-radius: 2px;
-  margin:5px;
+  margin: 5px;
 `;
 
 const SearchInput = styled.input`
   outline-width: 0;
   border: none;
   flex: 1;
-  height:30px;
-  border-radius:20px;
-  padding:15px;
-  background:#323739;
+  height: 30px;
+  border-radius: 20px;
+  padding: 15px;
+  background: #323739;
 `;
 
 const UserAvatar = styled(Avatar)`
@@ -239,8 +242,7 @@ const UserAvatar = styled(Avatar)`
   }
 `;
 
-const IconsContainer = styled.div`
-`
+const IconsContainer = styled.div``;
 
 export const StyledButton = styled.div`
   position: absolute;

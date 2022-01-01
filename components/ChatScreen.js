@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Avatar, IconButton } from "@material-ui/core";
+import { Avatar, Button, IconButton } from "@material-ui/core";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
@@ -7,14 +7,8 @@ import { auth, db, storage } from "../firebase";
 import Message from "./Message";
 import { useState, useEffect, useRef } from "react";
 import getRecipientEmail from "../utils/getRecipientEmail";
-import {
-  InsertEmoticon,
-  AttachFileSharp,
-  Mic,
-  Close,
-  Image,
-} from "@material-ui/icons/";
-import { AddPhotoAlternate, AttachFile} from "@material-ui/icons";
+import { InsertEmoticon, Mic, Close, Send } from "@material-ui/icons/";
+import { AddPhotoAlternate, AttachFile } from "@material-ui/icons";
 import {
   doc,
   Timestamp,
@@ -236,7 +230,7 @@ function ChatScreen({ chat, messages }) {
                 setOpenImageModal(true);
               }}
             >
-              <AttachFile/>
+              <AttachFile />
             </IconButton>
             <NewModal
               text=""
@@ -277,7 +271,7 @@ function ChatScreen({ chat, messages }) {
             onClick={() => setEmojiOpen(true)}
           >
             <InsertEmoticon
-              style={{ color: emojiOpen ? "#009688" : "#919191" }}
+              style={{ color: emojiOpen ? "#009688" : "white" }}
             />
           </div>
 
@@ -286,14 +280,10 @@ function ChatScreen({ chat, messages }) {
             placeholder="Type a message"
             onChange={(e) => setInput(e.target.value)}
           />
-          <button hidden disabled={!input} type="submit" onClick={sendMessage}>
-            Send Message
-          </button>
-          <Mic />
-
-          <button hidden disabled={!input} type="submit" onClick={sendMessage}>
-            Send Message
-          </button>
+          <Button disabled={!input} type="submit" onClick={sendMessage}>
+            <Send style={{ color: "white" }} />
+          </Button>
+          <Mic style={{ color: "white" }} />
         </InputContainer>
       </Container>
     </div>

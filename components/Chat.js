@@ -3,11 +3,18 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
 import { auth, db } from "../firebase";
 import getRecipientEmail from "../utils/getRecipientEmail";
-import { getDocs, collection, query, where,onSnapshot,orderBy } from "firebase/firestore";
+import {
+  getDocs,
+  collection,
+  query,
+  where,
+  onSnapshot,
+  orderBy,
+} from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
 import TimeAgo from "timeago-react";
-import styles from '../styles/loading.module.css'
+import styles from "../styles/loading.module.css";
 
 function Chat({ id, users }) {
   const router = useRouter();
@@ -40,17 +47,14 @@ function Chat({ id, users }) {
     router.push(`/chat/${id}`);
   };
 
- 
-
   return (
-   
     <Container onClick={enterChat}>
       {recipientData ? (
         <UserAvatar src={recipientData?.photoURL} />
       ) : (
         <UserAvatar>{recipientEmail[0]}</UserAvatar>
       )}
-     
+
       <HeaderInformation>
         <div>{recipientEmail}</div>
         {recipientData?.lastSeen?.toDate() ? (
@@ -61,10 +65,7 @@ function Chat({ id, users }) {
           <p>Unavailable</p>
         )}
       </HeaderInformation>
-      
     </Container>
-    
- 
   );
 }
 
@@ -76,41 +77,36 @@ const Container = styled.div`
   cursor: pointer;
   padding: 15px;
   word-break: break-word;
-  position:relative;
-  color:white;
-  border-top:0.1px solid #30383c;
- 
+  position: relative;
+  color: white;
+  border-top: 0.1px solid #30383c;
 
   :hover {
-    background:#30383c;
-    border-top-left-radius:30px;
-    border-bottom-left-radius:30px;
+    background: #30383c;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
 
-    ::before{
-      content:'';
+    ::before {
+      content: "";
       position: absolute;
-      right:0;
-      width:50px;
-      height:50px;
-      
-      border-radius:50%;
-      top:-50px;
-      box-shadow:25px 25px 0 #30383c;
-  }   
-  ::after{
-      content:'';
+      right: 0;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      top: -50px;
+      box-shadow: 25px 25px 0 #30383c;
+    }
+    ::after {
+      content: "";
       position: absolute;
-      right:0;
-      width:50px;
-      height:50px;
-      
-      border-radius:50%;
-      bottom:-50px;
-      box-shadow:25px -25px 0 #30383c;
+      right: 0;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      bottom: -50px;
+      box-shadow: 25px -25px 0 #30383c;
+    }
   }
-  }
-  
-  
 `;
 const UserAvatar = styled(Avatar)`
   margin: 5px;
