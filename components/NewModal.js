@@ -2,7 +2,7 @@ import { Modal, Box, Button } from "@material-ui/core";
 import styled from "styled-components";
 import FilePage from "./FilePage";
 
-function NewModal({ text, openModal, setOpenModal,itemRefs }) {
+function NewModal({ text, openModal, setOpenModal, itemRefs, chatId }) {
   const handleCloseModal = () => setOpenModal(false);
   return (
     <Modal
@@ -12,8 +12,10 @@ function NewModal({ text, openModal, setOpenModal,itemRefs }) {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        {itemRefs && text == "" && <FilePage itemRefs={itemRefs} />}
-        {!itemRefs && <p>{text}</p>}
+        {itemRefs && text == "" && chatId && (
+          <FilePage itemRefs={itemRefs} chatId={chatId} />
+        )}
+        {!itemRefs && !chatId && <p>{text}</p>}
         <StyledButton>
           <Button
             onClick={() => {
