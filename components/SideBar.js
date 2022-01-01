@@ -7,7 +7,6 @@ import {
   Box,
   TextField,
   Tooltip,
-  Icon,
 } from "@material-ui/core";
 
 import ChatIcon from "@material-ui/icons/Chat";
@@ -165,11 +164,7 @@ function SideBar() {
         </Header>
 
         <Search>
-          <SearchIcon
-            style={{
-              color: "white",
-            }}
-          />
+          <SearchIcon style={{ color: "white",marginRight:10 }} />
           <SearchInput
             style={{ color: "white" }}
             placeholder="Search in chats"

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Avatar, Button, IconButton } from "@material-ui/core";
+import { Avatar, Button, IconButton, Tooltip } from "@material-ui/core";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
@@ -208,13 +208,11 @@ function ChatScreen({ chat, messages }) {
               onChange={uploadFiles}
               hidden
             />
-            <IconButton
-              style={{
-                color: "white",
-              }}
-            >
+            <IconButton style={{ color: "white" }}>
               <label htmlFor="files">
-                <AddPhotoAlternate />
+                <Tooltip title="Send image">
+                  <AddPhotoAlternate />
+                </Tooltip>
               </label>
             </IconButton>
             <NewModal
@@ -223,14 +221,14 @@ function ChatScreen({ chat, messages }) {
               setOpenModal={setOpenModal}
             />
             <IconButton
-              style={{
-                color: "white",
-              }}
+              style={{ color: "white" }}
               onClick={() => {
                 setOpenImageModal(true);
               }}
             >
-              <AttachFile />
+              <Tooltip title="Show images">
+                <AttachFile />
+              </Tooltip>
             </IconButton>
             <NewModal
               text=""
@@ -270,9 +268,11 @@ function ChatScreen({ chat, messages }) {
             className={styles.chatWindowbtn}
             onClick={() => setEmojiOpen(true)}
           >
-            <InsertEmoticon
-              style={{ color: emojiOpen ? "#009688" : "white" }}
-            />
+            <Tooltip title="Open emoji board">
+              <InsertEmoticon
+                style={{ color: emojiOpen ? "#009688" : "white" }}
+              />
+            </Tooltip>
           </div>
 
           <Input
@@ -281,9 +281,13 @@ function ChatScreen({ chat, messages }) {
             onChange={(e) => setInput(e.target.value)}
           />
           <Button disabled={!input} type="submit" onClick={sendMessage}>
-            <Send style={{ color: "white" }} />
+            <Tooltip title="Send Message">
+              <Send style={{ color: input ? "#009688" : "white" }} />
+            </Tooltip>
           </Button>
-          <Mic style={{ color: "white" }} />
+          <Tooltip title="Send voice message">
+            <Mic style={{ color: "white" }} />
+          </Tooltip>
         </InputContainer>
       </Container>
     </div>
