@@ -1,0 +1,10 @@
+import "antd/dist/antd.css";
+import { Result } from "antd";
+const ResultInfo = ({ status, title, subTitle }) => {
+  return (
+    <div>
+      <Result status={status} title={title} subTitle={subTitle} />
+    </div>
+  );
+};
+export default ResultInfo;
