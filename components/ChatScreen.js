@@ -239,7 +239,7 @@ function ChatScreen({ chat, messages }) {
             ></NewModal>
           </HeaderIcons>
         </Header>
-
+        
         <MessageContainer>
           {showMessages()}
           <EndOfMessage ref={endOfMessagesRef} />
@@ -254,6 +254,7 @@ function ChatScreen({ chat, messages }) {
             />
           </div>
         </MessageContainer>
+       
 
         <InputContainer>
           <div
@@ -365,10 +366,11 @@ const HeaderIcons = styled.div``;
 
 const MessageContainer = styled.div`
   padding: 30px;
-  background: #11181c;
-
+  background:url("https://user-images.githubusercontent.com/61885344/147869080-3d7b7dcb-a073-483e-85c7-3d4695e39d82.png");
+  background-attachment: fixed;
   min-height: 90vh;
   margin-left: 10px;
+  background-size:1900px;
 `;
 
 const EndOfMessage = styled.div`

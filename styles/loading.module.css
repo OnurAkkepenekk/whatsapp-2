@@ -43,3 +43,64 @@
     transform: rotate(360deg);
   }
 }
+.btn:hover::before{
+  
+  transform:skewX(45deg) translateX(200px);
+
+}
+
+.btndiv{
+width:200px;
+height:50px;
+position: relative;
+
+}
+.btndiv::before{
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -5px;
+  width: 30px;
+  height: 10px;
+  border-radius: 10px;
+  transition:0.5s;
+  transition-delay: 0s;
+  background: #ff1f71;
+  box-shadow: 0 0 5px #ff1f71,
+  0 0 15px #ff1f71,
+  0 0 30px #ff1f71,
+  0 0 60px #ff1f71;
+}
+.btndiv:hover::before{
+  bottom:0;
+  height: 50%;
+  width: 80%;
+  border-radius: 30px;
+  transition-delay: 0.1s;
+}
+.btndiv::after{
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -5px;
+  width: 30px;
+  height: 10px;
+  border-radius: 10px;
+  transition:0.5s;
+  transition-delay: 0s;
+  background: #ff1f71;
+  box-shadow: 0 0 5px #ff1f71,
+  0 0 15px #ff1f71,
+  0 0 30px #ff1f71,
+  0 0 60px #ff1f71;
+}
+.btndiv:hover::after{
+  top:0;
+  height: 50%;
+  width: 80%;
+  border-radius: 30px;
+  transition-delay: 0.1s;
+}
+
