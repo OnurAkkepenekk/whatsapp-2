@@ -1,9 +1,11 @@
 import { Modal, Box, Button } from "@material-ui/core";
 import styled from "styled-components";
 import FilePage from "./FilePage";
+import { Row } from "antd";
 
 function NewModal({ text, openModal, setOpenModal, itemRefs, chatId }) {
   const handleCloseModal = () => setOpenModal(false);
+  console.log(itemRefs);
   return (
     <Modal
       open={openModal}
@@ -12,11 +14,18 @@ function NewModal({ text, openModal, setOpenModal, itemRefs, chatId }) {
       aria-describedby="modal-modal-description"
     >
       <StyledBox>
+        {itemRefs && text == "" && chatId && (
+          <div
+            className="site-card-wrapper"
+            style={{ maxHeight: "600px", overflow: "scroll" , overflowX: "hidden" }}
+          >
+            <Row gutter={15} className="scrollable-container" style={{ backgroundColor: "black"}}>
+              <FilePage itemRefs={itemRefs} chatId={chatId} />
+            </Row>
+          </div>
+        )}
+        {!itemRefs && !chatId && <p>{text}</p>}
         <Box>
-          {itemRefs && text == "" && chatId && (
-            <FilePage itemRefs={itemRefs} chatId={chatId} />
-          )}
-          {!itemRefs && !chatId && <p>{text}</p>}
           <StyledButton>
             <Button
               onClick={() => {
@@ -24,10 +33,13 @@ function NewModal({ text, openModal, setOpenModal, itemRefs, chatId }) {
               }}
               variant="text"
               style={{
-                color: "green",
+                color: "white",
+                border: "1px solid gray",
+                backgroundColor: "black"
+                
               }}
             >
-              OK
+              CLOSE
             </Button>
           </StyledButton>
         </Box>

@@ -28,6 +28,7 @@ import dynamic from "next/dynamic";
 import styles from "../styles/chatScreen.module.css";
 import NewModal from "./NewModal";
 import ResultInfo from "./Modal/Result/ResultInfo";
+import { Image } from "antd";
 
 const Picker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
@@ -176,10 +177,12 @@ function ChatScreen({ chat, messages }) {
       })
       .catch(() => {
         setOpenModal(true);
-        setIsUploaded(false);;
+        setIsUploaded(false);
         setStatus("error");
         setTitle("Submission Failed");
-        setSubTitle("Cloud server configuration takes 1-5 minutes, please try again.")
+        setSubTitle(
+          "Cloud server configuration takes 1-5 minutes, please try again."
+        );
       });
   };
 
@@ -196,12 +199,25 @@ function ChatScreen({ chat, messages }) {
       <Container>
         <Header>
           {recipientSnapshot ? (
-            <Avatar src={recipientSnapshot.photoURL} />
+            <Image.PreviewGroup>
+              <Image
+                style={{
+                  verticalAlign: "middle",
+                  width: "50px",
+                  height: "50px",
+                  borderRadius: "50%",
+                }}
+                src={recipientSnapshot.photoURL}
+                alt=""
+              ></Image>
+            </Image.PreviewGroup>
           ) : (
-            <Avatar src={recipientEmail[0]} />
+            <Image.PreviewGroup>
+              <Avatar src={recipientEmail[0]} />
+            </Image.PreviewGroup>
           )}
           <HeaderInformation>
-            <h3>{recipientEmail}</h3>
+            <HeaderEmail>{recipientEmail}</HeaderEmail>
             {recipientSnapshot ? (
               <p>
                 Last active: {""}
@@ -311,11 +327,7 @@ function ChatScreen({ chat, messages }) {
           onCancel={handleOk}
           width={1000}
         >
-          <ResultInfo
-            status={status}
-            title={title}
-            subTitle={subTitle}
-          />
+          <ResultInfo status={status} title={title} subTitle={subTitle} />
         </Modal>
       </Container>
     </div>
@@ -415,3 +427,6 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+const HeaderEmail = styled.h3`
+  color: white;
+`;

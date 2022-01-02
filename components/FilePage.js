@@ -3,7 +3,7 @@ import * as React from "react";
 import { ImageList, ImageListItem } from "@material-ui/core";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase";
-
+import { Card, Col, Image, Row } from "antd";
 function FilePage({ itemRefs, chatId }) {
   const [imageUrls, setImageUrls] = React.useState([]);
   React.useEffect(() => {
@@ -31,16 +31,23 @@ function FilePage({ itemRefs, chatId }) {
       });
   };
   return (
-    <ImageList cols={3} rowHeight={164}>
-      {/* <FileDownloadIcon />
-            <p>{item.name}</p> */}
-      {/* <img src={item} alt={item} loading="lazy" /> */}
+    <>
       {imageUrls.map((item) => (
-        <ImageListItem key={item.name}>
-          <img src={item} srcSet={item} alt={item} loading="lazy" />
-        </ImageListItem>
+        <Col key={item.name} span={8} style={{ marginBottom: "10px"}}>
+          <Card bordered={true} >
+            <Image.PreviewGroup>
+              <Image
+                src={item}
+                srcSet={item}
+                alt={item}
+                loading="lazy"
+                style={{ height: "200px", width: "1000",padding: "5"}}
+              />
+            </Image.PreviewGroup>
+          </Card>
+        </Col>
       ))}
-    </ImageList>
+    </>
   );
 }
 
