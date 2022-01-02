@@ -21,11 +21,13 @@ import {
   addDoc,
   onSnapshot,
 } from "firebase/firestore";
+import { Modal } from "antd";
 import TimeAgo from "timeago-react";
 import { ref, uploadBytes, listAll } from "firebase/storage";
 import dynamic from "next/dynamic";
 import styles from "../styles/chatScreen.module.css";
 import NewModal from "./NewModal";
+import ResultInfo from "./Modal/Result/ResultInfo";
 
 const Picker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
@@ -42,7 +44,10 @@ function ChatScreen({ chat, messages }) {
   const [openModal, setOpenModal] = React.useState(false);
   const [isUploaded, setIsUploaded] = useState(false);
   const [openImageModal, setOpenImageModal] = useState(false);
-
+  const [visible, setVisible] = useState(false);
+  const [status, setStatus] = useState();
+  const [title, setTitle] = useState();
+  const [subTitle, setSubTitle] = useState();
   useEffect(() => {
     (async () => {
       const messages = await getMessages();
@@ -164,10 +169,17 @@ function ChatScreen({ chat, messages }) {
         setOpenModal(true);
         setIsUploaded(true);
         setItemRefs((arr) => [...arr, storageRef]);
+        setVisible(true);
+        setStatus("success");
+        setTitle("Submission Successful");
+        setSubTitle("Please check your files section");
       })
       .catch(() => {
         setOpenModal(true);
-        setIsUploaded(false);
+        setIsUploaded(false);;
+        setStatus("error");
+        setTitle("Submission Failed");
+        setSubTitle("Cloud server configuration takes 1-5 minutes, please try again.")
       });
   };
 
@@ -176,6 +188,9 @@ function ChatScreen({ chat, messages }) {
     setInput(input + emojiObject.emoji);
   };
 
+  const handleOk = () => {
+    setVisible(false);
+  };
   return (
     <div>
       <Container>
@@ -215,11 +230,7 @@ function ChatScreen({ chat, messages }) {
                 </Tooltip>
               </label>
             </IconButton>
-            <NewModal
-              text="File uploaded successfully!"
-              openModal={openModal}
-              setOpenModal={setOpenModal}
-            />
+
             <IconButton
               style={{ color: "white" }}
               onClick={() => {
@@ -230,6 +241,7 @@ function ChatScreen({ chat, messages }) {
                 <AttachFile />
               </Tooltip>
             </IconButton>
+
             <NewModal
               text=""
               openModal={openImageModal}
@@ -290,6 +302,21 @@ function ChatScreen({ chat, messages }) {
             <Mic style={{ color: "white" }} />
           </Tooltip>
         </InputContainer>
+        <Modal
+          title=" File Transfer Information"
+          centered
+          forceRender
+          visible={visible}
+          onOk={handleOk}
+          onCancel={handleOk}
+          width={1000}
+        >
+          <ResultInfo
+            status={status}
+            title={title}
+            subTitle={subTitle}
+          />
+        </Modal>
       </Container>
     </div>
   );
