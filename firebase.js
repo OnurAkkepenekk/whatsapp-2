@@ -5,12 +5,12 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAmrSpe3ccuoarPVV7okBjciSBF5Z6RFJc",
-  authDomain: "whatsapp-2-b22a6.firebaseapp.com",
-  projectId: "whatsapp-2-b22a6",
-  storageBucket: "whatsapp-2-b22a6.appspot.com",
-  messagingSenderId: "943235218354",
-  appId: "1:943235218354:web:832cd1616c3b08a7f3c2ab",
+  apiKey: "AIzaSyC-yt8hEVwKQoY_BskbbSVyvz3Kn05M-P8",
+  authDomain: "chatapp-1-88005.firebaseapp.com",
+  projectId: "chatapp-1-88005",
+  storageBucket: "chatapp-1-88005.appspot.com",
+  messagingSenderId: "917467200688",
+  appId: "1:917467200688:web:b7513b1b456290df814f75"
 };
 
 // Initialize App
